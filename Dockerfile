@@ -6,5 +6,6 @@ LABEL "com.github.actions.color"="gray-dark"
 LABEL "repository"="https://github.com/unraid/release-action"
 LABEL "maintainer"="Alexis Tyler"
 
+ADD scripts /scripts
 ADD entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
