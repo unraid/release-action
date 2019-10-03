@@ -10,7 +10,7 @@ LABEL "maintainer"="Alexis Tyler"
 # Install git and npm
 RUN apt update \
     && apt -y upgrade \
-    && apt install -y git npm \
+    && apt install -y git npm hub \
     && apt autoremove \
     && apt autoclean \
     && apt clean
