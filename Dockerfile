@@ -7,10 +7,10 @@ LABEL "com.github.actions.color"="gray-dark"
 LABEL "repository"="https://github.com/unraid/release-action"
 LABEL "maintainer"="Alexis Tyler"
 
-# Install hub, git and npm
+# Install git and npm
 RUN apt update \
     && apt -y upgrade \
-    && apt install -y hub git npm \
+    && apt install -y git npm \
     && apt autoremove \
     && apt autoclean \
     && apt clean

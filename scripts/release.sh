@@ -65,13 +65,13 @@ export TAG
 
 if [[ $DRY_RUN ]]; then
     # Display info
-    bash ${DIR}/display-info.sh
+    bash ${DIR}display-info.sh
 else
     # Upload to Github releases
-    bash ${DIR}/release-to-github.sh
+    bash ${DIR}release-to-github.sh
 
     # # Upload to s3 bucket
-    bash ${DIR}/release-to-s3.sh
+    bash ${DIR}release-to-s3.sh
 
     # Remove temp files
     rm $NEW_FILE
