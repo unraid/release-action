@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Set creds from env
+touch ~/.s3cfg
+echo "[default]
+access_key = $AWS_ACCESS_KEY_ID
+secret_key = $AWS_ACCESS_KEY_SECRET" > ~/.s3cfg
+
+# Upload file to s3
+s3-cli put $FILE s3://$AWS_S3_BUCKET --acl-public
