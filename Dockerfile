@@ -7,10 +7,10 @@ LABEL "com.github.actions.color"="gray-dark"
 LABEL "repository"="https://github.com/unraid/release-action"
 LABEL "maintainer"="Alexis Tyler"
 
-# Install git and npm
+# Install wget, git and npm
 RUN apt-get update \
     && apt-get -y upgrade \
-    && apt-get install -y git npm \
+    && apt-get install -y wget git npm \
     && apt-get autoremove \
     && apt-get autoclean \
     && apt-get clean
