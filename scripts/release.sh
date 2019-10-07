@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -e
 
 # https://stackoverflow.com/a/56201734/2311366
 check_bash_version() {
@@ -22,7 +21,7 @@ check_bash_version() {
         local vnum=$major
     fi
     ((bv < vnum)) && {
-        printf '%s\n' "ERROR: Need Bash version $vstring or above, your version is ${BASH_VERSINFO[0]}.${BASH_VERSINFO[1]}"
+        # printf '%s\n' "ERROR: Need Bash version $vstring or above, your version is ${BASH_VERSINFO[0]}.${BASH_VERSINFO[1]}"
         rc=1
     }
     return $rc
@@ -31,10 +30,13 @@ check_bash_version() {
 ## Ensure we have version 4 otherwise
 ## associative arrays aren't supported
 check_bash_version 4
+bash_check_return_code=$?
 
-## associative array for job status
-unset JOBS
-declare -A JOBS
+if [[ ! $bash_check_return_code == 1 ]]; then
+    ## associative array for job status
+    unset JOBS
+    declare -A JOBS
+fi
 
 ## run command in the background
 background() {
@@ -134,8 +136,10 @@ export TAG
 if [[ $DRY_RUN ]]; then
     # Display info
     background ${DIR}/display-info.sh
-
-    reap || echo "Failed displaying info."
+ 
+    # Run command
+    reap
+    exit_code=$?
 else
     # Upload to Github releases
     background ${DIR}/release-to-github.sh
@@ -145,9 +149,17 @@ else
         background ${DIR}/release-to-s3.sh
     fi
 
-    reap || echo "Failed deploying!"
+    # Run command
+    reap
+    exit_code=$?
 
     # Remove temp files
     rm $NEW_FILE
     rm $CHANGELOG
+fi
+
+if [[ ! $exit_code == 0 ]]; then
+    echo "Failed deploying!" && exit $exit_code
+else
+    echo "Deployed successfully!"
 fi
