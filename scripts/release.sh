@@ -135,15 +135,17 @@ if [[ $DRY_RUN ]]; then
     # Display info
     background ${DIR}/display-info.sh
 
-    reap || echo "Failing displaying info"
+    reap || echo "Failed displaying info."
 else
     # Upload to Github releases
     background ${DIR}/release-to-github.sh
 
-    # # Upload to s3 bucket
-    background ${DIR}/release-to-s3.sh
+    # Only upload to s3 bucket if new release
+    if [[ ! -z "$IS_TAG" ]]; then
+        background ${DIR}/release-to-s3.sh
+    fi
 
-    reap || echo "Failing deploying!"
+    reap || echo "Failed deploying!"
 
     # Remove temp files
     rm $NEW_FILE
