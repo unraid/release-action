@@ -7,13 +7,13 @@ LABEL "com.github.actions.color"="gray-dark"
 LABEL "repository"="https://github.com/unraid/release-action"
 LABEL "maintainer"="Alexis Tyler"
 
-# Install git and npm
-RUN apt update \
-    && apt -y upgrade \
-    && apt install -y git npm hub \
-    && apt autoremove \
-    && apt autoclean \
-    && apt clean
+# Install git, npm and hub
+RUN apt-get update \
+    && apt-get -y upgrade \
+    && apt-get install -y git npm hub \
+    && apt-get autoremove \
+    && apt-get autoclean \
+    && apt-get clean
 
 RUN npm install -g s3-cli
 
