@@ -16,7 +16,7 @@ RUN apt-get update \
     && apt-get clean
 
 RUN wget -nv -O- https://github.com/github/hub/releases/download/v2.12.7/hub-linux-amd64-2.12.7.tgz | \
-    tar xz --strip-components=1 "*/bin/hub"
+    tar xz --strip-components=1 --wildcards "*/bin/hub"
 
 RUN npm install -g s3-cli
 
