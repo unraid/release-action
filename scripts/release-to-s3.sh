@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [[ -z $AWS_ACCESS_KEY_ID || -z $AWS_ACCESS_KEY_SECRET]] then;
+  echo "Skipping S3 as envs are missing"
+  exit 0
+fi
+
 # Set creds from env
 touch ~/.s3cfg
 echo "[default]
