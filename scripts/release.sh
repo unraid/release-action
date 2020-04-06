@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
 
+get_latest_github_release() {
+    # If running this locally you'll need to change the next line to
+    # accept basic auth by adding `${auth}` after the `https://`.
+    # Then update repo below to use $3
+    local auth="$1:$2@"
+    local repo=$1
+    echo $(curl --silent "https://api.github.com/repos/$repo/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+}
+
+replace() {
+    local search=$1
+    local replace=$2
+    local file=$3
+    sed -i "s/${search}/${replace}/g" $file
+}
+
 # https://stackoverflow.com/a/56201734/2311366
 check_bash_version() {
     local major=${1:-4}
@@ -27,8 +43,8 @@ check_bash_version() {
     return $rc
 }
 
-## Ensure we have version 4 otherwise
-## associative arrays aren't supported
+# Ensure we have version 4 otherwise
+# associative arrays aren't supported
 check_bash_version 4
 bash_check_return_code=$?
 
@@ -38,14 +54,14 @@ if [[ ! $bash_check_return_code == 1 ]]; then
     declare -A JOBS
 fi
 
-## run command in the background
+# Run command in the background
 background() {
   eval $1 & JOBS[$!]="$1"
 }
 
-## check exit status of each job
-## preserve exit status in ${JOBS}
-## returns 1 if any job failed
+# Check exit status of each job
+# preserve exit status in ${JOBS}
+# returns 1 if any job failed
 # https://unix.stackexchange.com/a/230740/119653
 reap() {
   local cmd
@@ -146,7 +162,18 @@ else
 
     # Only upload to s3 bucket if new release
     if [[ ! -z "$IS_TAG" ]]; then
-        background ${DIR}/release-to-s3.sh
+        background ${DIR}/release-to-s3.sh $FILE
+
+        # Replace plg file's template vars
+        PLG_VERSION=$(date '+%Y.%m.%d.%H%M')
+        GRAPHQL_API_VERSION=$(get_latest_github_release 'unraid/graphql-api')
+        PLUGINS_VERSION=$(get_latest_github_release 'unraid/plugins')
+        replace "{{ plg_version }}" $PLG_VERSION dynamix.unraid.net.plg
+        replace "{{ node_graphql_api_version }}" $GRAPHQL_API_VERSION dynamix.unraid.net.plg
+        replace "{{ node_plugins_version }}" $PLUGINS_VERSION dynamix.unraid.net.plg
+
+        # Upload plg file to s3
+        background ${DIR}/release-to-s3.sh dynamix.unraid.net.plg
     fi
 
     # Run command
