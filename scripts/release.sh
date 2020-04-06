@@ -6,7 +6,7 @@ get_latest_github_release() {
     # Then update repo below to use $3
     local auth="$1:$2@"
     local repo=$1
-    echo $(curl --silent "https://api.github.com/repos/$repo/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+    echo $(hub api "repos/${repo}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
 }
 
 replace() {
