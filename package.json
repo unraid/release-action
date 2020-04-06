@@ -6,7 +6,7 @@
   "main": "entrypoint.sh",
   "dependencies": {},
   "devDependencies": {
-    "cz-conventional-changelog": "3.0.2"
+    "cz-conventional-changelog": "3.1.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
