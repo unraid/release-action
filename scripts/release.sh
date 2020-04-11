@@ -158,11 +158,11 @@ if [[ $DRY_RUN ]]; then
     exit_code=$?
 else
     # Upload to Github releases
-    background ${DIR}/release-to-github.sh
+    background "${DIR}/release-to-github.sh $FILE"
 
     # Only upload to s3 bucket if new release
     if [[ ! -z "$IS_TAG" ]]; then
-        background ${DIR}/release-to-s3.sh $FILE
+        background "${DIR}/release-to-s3.sh $FILE"
 
         # Upload plg file only if it exists
         if [[ -f dynamix.unraid.net.plg ]]; then
@@ -170,12 +170,12 @@ else
             PLG_VERSION=$(date '+%Y.%m.%d.%H%M')
             GRAPHQL_API_VERSION=$(get_latest_github_release 'unraid/graphql-api')
             PLUGINS_VERSION=$(get_latest_github_release 'unraid/plugins')
-            replace "{{ plg_version }}" $PLG_VERSION dynamix.unraid.net.plg
-            replace "{{ node_graphql_api_version }}" $GRAPHQL_API_VERSION dynamix.unraid.net.plg
-            replace "{{ node_plugins_version }}" $PLUGINS_VERSION dynamix.unraid.net.plg
+            replace "{{ plg_version }}" $PLG_VERSION "${DIR}/dynamix.unraid.net.plg"
+            replace "{{ node_graphql_api_version }}" $GRAPHQL_API_VERSION "${DIR}/dynamix.unraid.net.plg"
+            replace "{{ node_plugins_version }}" $PLUGINS_VERSION "${DIR}/dynamix.unraid.net.plg"
 
             # Upload plg file to s3
-            background ${DIR}/release-to-s3.sh dynamix.unraid.net.plg
+            background "${DIR}/release-to-s3.sh ${DIR}/dynamix.unraid.net.plg"
         fi
     fi
 
