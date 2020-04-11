@@ -49,7 +49,7 @@ check_bash_version 4
 bash_check_return_code=$?
 
 if [[ ! $bash_check_return_code == 1 ]]; then
-    ## associative array for job status
+    # associative array for job status
     unset JOBS
     declare -A JOBS
 fi
@@ -164,16 +164,19 @@ else
     if [[ ! -z "$IS_TAG" ]]; then
         background ${DIR}/release-to-s3.sh $FILE
 
-        # Replace plg file's template vars
-        PLG_VERSION=$(date '+%Y.%m.%d.%H%M')
-        GRAPHQL_API_VERSION=$(get_latest_github_release 'unraid/graphql-api')
-        PLUGINS_VERSION=$(get_latest_github_release 'unraid/plugins')
-        replace "{{ plg_version }}" $PLG_VERSION dynamix.unraid.net.plg
-        replace "{{ node_graphql_api_version }}" $GRAPHQL_API_VERSION dynamix.unraid.net.plg
-        replace "{{ node_plugins_version }}" $PLUGINS_VERSION dynamix.unraid.net.plg
+        # Upload plg file only if it exists
+        if [[ -f dynamix.unraid.net.plg ]]; then
+            # Replace plg file's template vars
+            PLG_VERSION=$(date '+%Y.%m.%d.%H%M')
+            GRAPHQL_API_VERSION=$(get_latest_github_release 'unraid/graphql-api')
+            PLUGINS_VERSION=$(get_latest_github_release 'unraid/plugins')
+            replace "{{ plg_version }}" $PLG_VERSION dynamix.unraid.net.plg
+            replace "{{ node_graphql_api_version }}" $GRAPHQL_API_VERSION dynamix.unraid.net.plg
+            replace "{{ node_plugins_version }}" $PLUGINS_VERSION dynamix.unraid.net.plg
 
-        # Upload plg file to s3
-        background ${DIR}/release-to-s3.sh dynamix.unraid.net.plg
+            # Upload plg file to s3
+            background ${DIR}/release-to-s3.sh dynamix.unraid.net.plg
+        fi
     fi
 
     # Run command
