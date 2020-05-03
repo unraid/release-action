@@ -13,6 +13,7 @@ replace() {
     local search=$1
     local replace=$2
     local file=$3
+    printf '%s\n' "replacing '${search}' with '${replace}' in file '${file}'"
     sed -i "s/${search}/${replace}/g" $file
 }
 
