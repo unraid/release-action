@@ -7,15 +7,17 @@ LABEL "com.github.actions.color"="gray-dark"
 LABEL "repository"="https://github.com/unraid/release-action"
 LABEL "maintainer"="Alexis Tyler"
 
-# Install wget, git and npm
+# Install curl, git and npm
 RUN apt-get update \
     && apt-get -y upgrade \
-    && apt-get install -y wget git npm \
+    && apt-get install -y curl git npm \
     && apt-get autoremove \
     && apt-get autoclean \
     && apt-get clean
 
-RUN curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1 && mv bin/hub /usr/bin/hub
+# Download and install hub
+RUN curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1 \
+    && mv ./bin/hub /usr/bin/hub
 
 RUN npm install -g s3-cli
 
