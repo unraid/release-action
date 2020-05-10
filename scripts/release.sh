@@ -165,11 +165,11 @@ else
     if [[ ! -z "$IS_TAG" ]]; then
         background "${DIR}/release-to-s3.sh $FILE"
 
-        # Upload plg file only if it exists
-        if [[ -f dynamix.unraid.net.plg ]]; then
+        # Only upload plg file in the graphql-api repo
+        if [[ $REPO == "unraid/graphql-api" ]]; then
             # Replace plg file's template vars
             PLG_VERSION=$(date '+%Y.%m.%d.%H%M')
-            GRAPHQL_API_VERSION=$(get_latest_github_release 'unraid/graphql-api')
+            GRAPHQL_API_VERSION=$RELEASE_TAG
             PLUGINS_VERSION=$(get_latest_github_release 'unraid/plugins')
             replace "{{ plg_version }}" $PLG_VERSION dynamix.unraid.net.plg
             replace "{{ node_graphql_api_version }}" $GRAPHQL_API_VERSION dynamix.unraid.net.plg
