@@ -15,7 +15,7 @@ RUN apt-get update \
     && apt-get autoclean \
     && apt-get clean
 
-RUN curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
+RUN curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1 && mv bin/hub /usr/bin/hub
 
 RUN npm install -g s3-cli
 
