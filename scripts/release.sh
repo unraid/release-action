@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
-# @todo: Remove this debugging code
-hub api --flat "repos/unraid/plugins/releases/latest"
-exit 1
-
 get_latest_github_release() {
     local repo=$1
-    echo $(GITHUB_USER='unraid' && hub api --flat "repos/${repo}/releases/latest" | awk '/.tag_name/ {print $2}')
+    echo $(hub api --flat "repos/${repo}/releases/latest" | awk '/.tag_name/ {print $2}')
 }
 
 replace() {
