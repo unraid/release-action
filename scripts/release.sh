@@ -6,7 +6,7 @@ get_latest_github_release() {
     # Then update repo below to use $3
     local auth="$1:$2@"
     local repo=$1
-    echo $(hub api --flat "repos/${repo}/releases/latest" | awk '/.tag_name/ {print $2}')
+    echo $(GITHUB_USER='unraid' && hub api --flat "repos/${repo}/releases/latest" | awk '/.tag_name/ {print $2}')
 }
 
 replace() {
