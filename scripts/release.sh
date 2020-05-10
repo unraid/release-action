@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
+# @todo: Remove this debugging code
+hub api --flat "repos/unraid/plugins/releases/latest"
+exit 1
+
 get_latest_github_release() {
-    # If running this locally you'll need to change the next line to
-    # accept basic auth by adding `${auth}` after the `https://`.
-    # Then update repo below to use $3
-    local auth="$1:$2@"
     local repo=$1
     echo $(GITHUB_USER='unraid' && hub api --flat "repos/${repo}/releases/latest" | awk '/.tag_name/ {print $2}')
 }
