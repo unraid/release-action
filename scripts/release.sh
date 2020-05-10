@@ -166,7 +166,7 @@ else
         background "${DIR}/release-to-s3.sh $FILE"
 
         # Only upload plg file in the graphql-api repo
-        if [[ $REPO == "unraid/graphql-api" ]]; then
+        if [[ $REPO == "graphql-api" ]]; then
             # Replace plg file's template vars
             PLG_VERSION=$(date '+%Y.%m.%d.%H%M')
             GRAPHQL_API_VERSION=$RELEASE_TAG
