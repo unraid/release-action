@@ -161,6 +161,14 @@ else
     if [[ ! -z "$IS_TAG" ]]; then
         background "${DIR}/release-to-s3.sh $FILE"
 
+        # In plugins we need to grab the plg file
+        # otherwise it'll be missing for the templating step
+        if [[ $REPO == "plugins" ]]; then
+            git clone git@github.com:unraid/graphql-api.git /tmp/graphql-api
+            mv /tmp/graphql-api/dynamix.unraid.net.plg .
+            rm -rf /tmp/graphql-api
+        fi
+
         # Only upload plg file in the graphql-api/plugins repo
         if [[ $REPO == "graphql-api" ]] ||  [[ $REPO == "plugins" ]]; then
             # Replace plg file's template vars
