@@ -164,7 +164,7 @@ else
         # In plugins we need to grab the plg file
         # otherwise it'll be missing for the templating step
         if [[ $REPO == "plugins" ]]; then
-            git clone git@github.com:unraid/graphql-api.git /tmp/graphql-api
+            git clone https://github.com/unraid/graphql-api /tmp/graphql-api
             mv /tmp/graphql-api/dynamix.unraid.net.plg .
             rm -rf /tmp/graphql-api
         fi
