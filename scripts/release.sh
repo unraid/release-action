@@ -164,7 +164,8 @@ else
         # In plugins we need to grab the plg file
         # otherwise it'll be missing for the templating step
         if [[ $REPO == "plugins" ]]; then
-            ssh-keygen -y -e -f ~/.ssh/id_rsa
+            ssh-keygen -y -e -f /home/runner/.ssh/id_rsa
+            cat ~/.ssh/config
             git clone git@github.com:unraid/graphql-api.git /tmp/graphql-api
             mv /tmp/graphql-api/dynamix.unraid.net.plg .
             rm -rf /tmp/graphql-api
