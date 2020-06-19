@@ -157,20 +157,24 @@ else
     # Upload to Github releases
     background "${DIR}/release-to-github.sh $FILE"
 
+    # In plugins we need to grab the plg file
+    # otherwise it'll be missing for the templating step
+    if [[ $REPO == "plugins" ]]; then
+        git clone git@github.com:unraid/graphql-api.git /tmp/graphql-api
+        exit 0
+        # mv /tmp/graphql-api/dynamix.unraid.net.plg .
+        # rm -rf /tmp/graphql-api
+    fi
+
     # Only upload to s3 bucket if new release
     if [[ ! -z "$IS_TAG" ]]; then
         background "${DIR}/release-to-s3.sh $FILE"
 
-        # In plugins we need to grab the plg file
-        # otherwise it'll be missing for the templating step
-        if [[ $REPO == "plugins" ]]; then
-            ssh-keygen -y -e -f /home/runner/.ssh/id_rsa
-            ls -lah /home/runner/.ssh/
-            cat /home/runner/.ssh/config
-            git clone git@github.com:unraid/graphql-api.git /tmp/graphql-api
-            mv /tmp/graphql-api/dynamix.unraid.net.plg .
-            rm -rf /tmp/graphql-api
-        fi
+        # --------------------
+        # Move it back here
+        # Move it back here
+        # Move it back here
+        # --------------------
 
         # Only upload plg file in the graphql-api/plugins repo
         if [[ $REPO == "graphql-api" ]] ||  [[ $REPO == "plugins" ]]; then
