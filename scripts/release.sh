@@ -160,7 +160,7 @@ else
     # In plugins we need to grab the plg file
     # otherwise it'll be missing for the templating step
     if [[ $REPO == "plugins" ]]; then
-        ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+        ssh-keyscan -H github.com >> /runner/home/.ssh/known_hosts
         git clone git@github.com:unraid/graphql-api.git /tmp/graphql-api
         exit 1
         # mv /tmp/graphql-api/dynamix.unraid.net.plg .
