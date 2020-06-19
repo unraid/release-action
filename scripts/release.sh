@@ -86,6 +86,8 @@ reverse() {
 
 add_ssh_key() {
     if [[ ! -z "$SSH_KEY" ]]; then
+        echo "Adding SSH key"
+
         mkdir ~/.ssh/
 
         # Add private key
@@ -105,6 +107,8 @@ add_ssh_key() {
 
         # Add private key to agent
         ssh-add -k ~/.ssh/id_rsa
+
+        echo "Done adding key"
     fi
 }
 
