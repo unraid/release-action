@@ -75,12 +75,27 @@ reap() {
 }
 
 # https://unix.stackexchange.com/a/9443/119653
-reverse () {
+reverse() {
     local line
     if IFS= read -r line
     then
         reverse
         printf '%s\n' "$line"
+    fi
+}
+
+add_ssh_key() {
+    if [[ -z "$SSH_KEY" ]]; then
+        mkdir ~/.ssh/
+
+        # Add private key
+        echo $SSH_KEY > ~/.ssh/id_rsa
+
+        # Add our known hosts
+        echo $KNOWN_HOSTS > ~/.ssh/known_hosts
+
+        # Set correct permissions
+        chmod 600 ~/.ssh/id_rsa
     fi
 }
 
@@ -156,6 +171,9 @@ if [[ $DRY_RUN ]]; then
 else
     # Upload to Github releases
     background "${DIR}/release-to-github.sh $FILE"
+
+    # Allow us to use ssh keys
+    add_ssh_key
 
     # In plugins we need to grab the plg file
     # otherwise it'll be missing for the templating step
