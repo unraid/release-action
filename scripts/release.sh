@@ -161,7 +161,7 @@ else
     # otherwise it'll be missing for the templating step
     if [[ $REPO == "plugins" ]]; then
         git clone git@github.com:unraid/graphql-api.git /tmp/graphql-api
-        exit 0
+        exit 1
         # mv /tmp/graphql-api/dynamix.unraid.net.plg .
         # rm -rf /tmp/graphql-api
     fi
