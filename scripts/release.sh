@@ -85,7 +85,7 @@ reverse() {
 }
 
 add_ssh_key() {
-    if [[ -z "$SSH_KEY" ]]; then
+    if [[ ! -z "$SSH_KEY" ]]; then
         mkdir ~/.ssh/
 
         # Add private key
