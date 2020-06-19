@@ -91,11 +91,20 @@ add_ssh_key() {
         # Add private key
         echo $SSH_KEY > ~/.ssh/id_rsa
 
+        # Set correct permissions
+        chmod 600 ~/.ssh/id_rsa
+
         # Add our known hosts
         echo $KNOWN_HOSTS > ~/.ssh/known_hosts
 
-        # Set correct permissions
-        chmod 600 ~/.ssh/id_rsa
+        # Create ssh config
+        printf "Host *\n  AddKeysToAgent yes\n  UseKeychain yes\n  IdentityFile ~/.ssh/id_rsa" > ~/.ssh/config
+
+        # Start agent
+        eval "$(ssh-agent -s)"
+
+        # Add private key to agent
+        ssh-add -k ~/.ssh/id_rsa
     fi
 }
 
@@ -172,13 +181,12 @@ else
     # Upload to Github releases
     background "${DIR}/release-to-github.sh $FILE"
 
-    # Allow us to use ssh keys
+    # Allow us to use our ssh keys
     add_ssh_key
 
     # In plugins we need to grab the plg file
     # otherwise it'll be missing for the templating step
     if [[ $REPO == "plugins" ]]; then
-        ssh-keyscan -H github.com >> /runner/home/.ssh/known_hosts
         git clone git@github.com:unraid/graphql-api.git /tmp/graphql-api
         exit 1
         # mv /tmp/graphql-api/dynamix.unraid.net.plg .
