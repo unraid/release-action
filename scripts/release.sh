@@ -94,7 +94,7 @@ fi
 RELEASE_TAG=$(git describe --tags $RELEASE_COMMIT)
 RELEASE=$(echo $RELEASE_TAG | awk -F- '{print $1}')
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
-REPO=$(echo "${REPO#*/}")
+REPO=$(echo "${GITHUB_REPOSITORY#*/}")
 ORG="unraid"
 CHANGELOG="${DIR}/release.md"
 FILE=unraid-$REPO-*.tgz
