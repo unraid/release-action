@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-get_latest_github_release() {
-    local repo=$1
-    echo $(hub api --flat "repos/${repo}/releases/latest" | awk '/.tag_name/ {print $2}')
-}
-
 replace() {
     local search=$1
     local replace=$2
@@ -163,7 +158,7 @@ else
 
         # Replace plg file's template vars
         PLG_VERSION=$(date '+%Y.%m.%d.%H%M')
-        NODE_API_VERSION=$(if [[ $REPO == "node-api" ]]; then echo $RELEASE_TAG; else get_latest_github_release 'unraid/node-api'; fi)
+        NODE_API_VERSION=$RELEASE_TAG
         replace "{{ plg_version }}" $PLG_VERSION dynamix.unraid.net.plg
         replace "{{ node_api_version }}" $NODE_API_VERSION dynamix.unraid.net.plg
 
