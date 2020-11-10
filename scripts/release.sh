@@ -161,26 +161,14 @@ else
     if [[ ! -z "$IS_TAG" ]]; then
         background "${DIR}/release-to-s3.sh $FILE"
 
-        # We need to grab the plg file
-        # otherwise it'll be missing for the templating step
-        if [[ $REPO == "plugins" ]]; then
-            git clone https://github.com/unraid/unraid.net /tmp/unraid.net
-            mv /tmp/unraid.net/dynamix.unraid.net.plg .
-        fi
+        # Replace plg file's template vars
+        PLG_VERSION=$(date '+%Y.%m.%d.%H%M')
+        NODE_API_VERSION=$(if [[ $REPO == "node-api" ]]; then echo $RELEASE_TAG; else get_latest_github_release 'unraid/node-api'; fi)
+        replace "{{ plg_version }}" $PLG_VERSION dynamix.unraid.net.plg
+        replace "{{ node_api_version }}" $NODE_API_VERSION dynamix.unraid.net.plg
 
-        # Only upload plg file in the graphql-api/plugins repo
-        if [[ $REPO == "graphql-api" ]] ||  [[ $REPO == "plugins" ]]; then
-            # Replace plg file's template vars
-            PLG_VERSION=$(date '+%Y.%m.%d.%H%M')
-            GRAPHQL_API_VERSION=$(if [[ $REPO == "graphql-api" ]]; then echo $RELEASE_TAG; else get_latest_github_release 'unraid/graphql-api'; fi)
-            PLUGINS_VERSION=$(if [[ $REPO == "plugins" ]]; then echo $RELEASE_TAG; else get_latest_github_release 'unraid/plugins'; fi)
-            replace "{{ plg_version }}" $PLG_VERSION dynamix.unraid.net.plg
-            replace "{{ node_graphql_api_version }}" $GRAPHQL_API_VERSION dynamix.unraid.net.plg
-            replace "{{ node_plugins_version }}" $PLUGINS_VERSION dynamix.unraid.net.plg
-
-            # Upload plg file to s3
-            background "${DIR}/release-to-s3.sh dynamix.unraid.net.plg"
-        fi
+        # Upload plg file to s3
+        background "${DIR}/release-to-s3.sh dynamix.unraid.net.plg"
     fi
 
     # Run command
